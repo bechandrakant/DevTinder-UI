@@ -1,14 +1,24 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { removeUser } from "../features/userSlice";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Navbar = () => {
   const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
-    dispatch(removeUser());
+    axios
+      .post("http://localhost:3000/logout", {}, { withCredentials: true })
+      .then(() => {
+        dispatch(removeUser());
+        navigate("/login");
+      })
+      .catch(() => {
+        alert("Some error occured, please try again");
+      });
   };
 
   return (
